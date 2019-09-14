@@ -1,0 +1,68 @@
+select * from Customer;
+insert into Customer values('C2991', 'Amad', 'soleman', 'm', 0189541292, 'persiaran semarak', 'cyberjaya', 'selangor', 63000);
+
+select * from Reservation;
+update Reservation set hall_Id = 'H201' where reservation_Id = 'R1077';
+
+select * from Payment;
+delete from Payment where payment_Id = 'P00025';
+
+select * from Payment;
+insert into Payment values('P10025', to_date('03/01/2016', 'dd/mm/yyyy'), 700, 'R1011');
+
+select * from Staff;
+update Staff set salary = 20000 where staff_Id = 'S1902';
+
+
+
+
+select r.reservationDate, r.time, r.duration, r.hall_Id, r.customer_Id, p.amount
+from reservation r, payment p
+where r.reservation_Id = p.reservation_Id and p.amount > 800
+order by r.reservationDate;
+
+select s.staff_Id, r.reservation_Id, r.reservationDate, r.hall_Id
+from staff s, reservation r
+where s.staff_id = r.staff_Id and s.staff_Id = 'S1902';
+
+select c.customer_id, c.fName, r.reservationDate, r.hall_Id, r.time
+from customer c, reservation r
+where c.customer_Id = r.customer_Id and c.customer_Id = 'C1179'
+order by r.hall_Id;
+
+select h.hall_Id, h.Name, r.reservationDate, r.time, r.duration
+from hall h, reservation r
+where h.hall_Id = r.hall_Id and r.reservationDate > '01-Feb-2016'
+order by h.hall_Id;
+
+select *
+from customer
+where fName like 'A%';
+
+
+
+select type, count(name) as No_Of_hall
+from hall
+group by type;
+
+select h.name, count(p.reservation_Id) as No_Of_times_reserved
+from hall h, reservation r, payment p
+where h.hall_Id = r.hall_Id and r.reservation_Id = p.reservation_Id
+group by h.name;
+
+select h.name, avg(p.amount) as Average_earned, sum(p.amount) as total_earned
+from hall h, reservation r, payment p
+where h.hall_Id = r.hall_Id and r.reservation_Id = p.reservation_Id
+group by h.name;
+
+select h.hall_Id, h.name, count(r.reservation_Id) as no_of_time_rented
+from hall h, reservation r
+where h.hall_Id = r.hall_Id and r.time > 16
+group by h.hall_Id, h.name
+order by h.hall_Id;
+
+select s.staff_Id, concat(s.fName, s.lName) as Name, count(r.reservation_Id)
+from staff s, reservation r
+where s.staff_Id = r.staff_Id
+group by s.staff_Id, s.fName, s.lName
+having count(r.reservation_Id) > 1;
